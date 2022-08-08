@@ -1,11 +1,9 @@
 import type { AWS } from '@serverless/typescript';
-
-import hello from '@functions/hello';
-
+import { createTodo, getTodo, getAllTodos, updateTodo, deleteTodo } from '@functions/todo';
 const serverlessConfiguration: AWS = {
   service: 'aws-serverless-typescript-api',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dynamodb-local'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -17,11 +15,28 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iam: {
+      role: {
+        statements: [{
+          Effect: "Allow",
+          Action: [
+            "dynamodb:DescribeTable",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem",
+          ],
+          Resource: "arn:aws:dynamodb:us-west-2:*:table/TodosTable",
+        }],
+      },
+    },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { getAllTodos, createTodo, getTodo, updateTodo, deleteTodo },
   package: { individually: true },
-  custom: {
+  custom:{
     esbuild: {
       bundle: true,
       minify: false,
@@ -32,7 +47,37 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
+    dynamodb:{
+      start:{
+        port: 5000,
+        inMemory: true,
+        migrate: true,
+      },
+      stages: "dev"
+    }
   },
-};
+  resources: {
+    Resources: {
+      TodosTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: {
+          TableName: "TodosTable",
+          AttributeDefinitions: [{
+            AttributeName: "todosId",
+            AttributeType: "S",
+          }],
+          KeySchema: [{
+            AttributeName: "todosId",
+            KeyType: "HASH"
+          }],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 1,
+            WriteCapacityUnits: 1
+          },
 
+        }
+      }
+    }
+  }
+};
 module.exports = serverlessConfiguration;
