@@ -4,7 +4,7 @@ import Todo from "src/configs/interfaces/todo";
 export default class TodoService {
     private TableName: string = "TodoTableName";
     constructor(private docClient: DocumentClient) {
-
+        
     }
     // get all todos
     async getAllTodos(): Promise<Todo[]> {

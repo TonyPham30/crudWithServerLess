@@ -18,10 +18,10 @@ export const getAllTodos = middyfy(async (): Promise<APIGatewayProxyResult> => {
 export const createTodo = middyfy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
         const id = v4();
-        const todo: Todo = await todoService.createTodo({
+        const todo = await todoService.createTodo({
             todosId: id,
-            title: "title",
-            description: "description",
+            title: event.body,
+            description: event.body,
             createdAt: new Date().toISOString(),
             status: false
         })
