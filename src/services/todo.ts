@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import Todo from "src/configs/interfaces/todo";
 
 export default class TodoService {
-    private TableName: string = "TodoTableName";
+    private TableName: string = "TodosTable";
     constructor(private docClient: DocumentClient) {
         
     }
