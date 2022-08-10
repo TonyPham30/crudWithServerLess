@@ -4,6 +4,7 @@ import { middyfy } from '@libs/lambda';
 import { v4 } from "uuid";
 import todoService from "../../services"
 import Todo from "src/configs/interfaces/todo";
+import {Request, Response } from "express"
 
 // function get all todo
 export const getAllTodos = middyfy(async (): Promise<APIGatewayProxyResult> => {
@@ -14,27 +15,28 @@ export const getAllTodos = middyfy(async (): Promise<APIGatewayProxyResult> => {
 })
 
 // function create a new todo
-
-export const createTodo = middyfy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+// middyfy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult>
+export const createTodo = async (req: Request, res: Response) => {
     try {
         const id = v4();
+        const body = JSON.parse(req.body)
         const todo = await todoService.createTodo({
             todosId: id,
-            title: event.body,
-            description: event.body,
+            title: body.title,
+            description: body.description,
             createdAt: new Date().toISOString(),
             status: false
         })
         return formatJSONResponse({
             todo
-        });
-    } catch (e) {
+        })
+    } catch (error) {
         return formatJSONResponse({
             status: 500,
-            message: e
+            message: error
         });
     }
-})
+}
 
 // get a todo
 export const getTodo = middyfy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
