@@ -86,7 +86,7 @@ export const deleteTodo = middyfy(async (event: APIGatewayProxyEvent): Promise<A
 })
 
 export const helloHandler = middyfy(async (): Promise<APIGatewayProxyResult> => {
-    const message = "helloHandler"
+    const message = "helloHandler fucking sit"
     return formatJSONResponse({
         message
     });

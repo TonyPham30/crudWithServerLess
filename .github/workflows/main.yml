@@ -36,4 +36,4 @@ jobs:
           fi
       - name: auto-deploy
         run: |
-          serverless deploy --stage production --region ap-northeast-1
+          serverless deploy --stage dev --region ap-northeast-1
