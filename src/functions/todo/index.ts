@@ -58,3 +58,14 @@ export const deleteTodo = {
         },
     ],
 };
+export const helloHandler = {
+    handler: `${handlerPath(__dirname)}/handler.helloHandler`,
+    events: [
+        {
+            http: {
+                method: 'get',
+                path: 'helloHandler',
+            },
+        },
+    ],
+};

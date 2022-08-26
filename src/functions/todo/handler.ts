@@ -3,8 +3,7 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { v4 } from "uuid";
 import todoService from "../../services"
-import Todo from "src/configs/interfaces/todo";
-import {Request, Response } from "express"
+import {Request} from "express"
 
 // function get all todo
 export const getAllTodos = middyfy(async (): Promise<APIGatewayProxyResult> => {
@@ -16,7 +15,7 @@ export const getAllTodos = middyfy(async (): Promise<APIGatewayProxyResult> => {
 
 // function create a new todo
 // middyfy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult>
-export const createTodo = async (req: Request, res: Response) => {
+export const createTodo = async (req: Request) => {
     try {
         const id = v4();
         const body = JSON.parse(req.body)
@@ -85,3 +84,10 @@ export const deleteTodo = middyfy(async (event: APIGatewayProxyEvent): Promise<A
         });
     }
 })
+
+export const helloHandler = middyfy(async (): Promise<APIGatewayProxyResult> => {
+    const message = "helloHandler"
+    return formatJSONResponse({
+        message
+    });
+});
